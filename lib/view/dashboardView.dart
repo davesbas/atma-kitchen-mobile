@@ -33,7 +33,8 @@ class AtmaKitchenPage extends StatelessWidget {
                 color: Colors.blue,
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, // Align items to the left
+                crossAxisAlignment:
+                    CrossAxisAlignment.start, // Align items to the left
                 children: [
                   SizedBox(height: 14.0),
                   CircleAvatar(
@@ -106,7 +107,8 @@ class AtmaKitchenPage extends StatelessWidget {
                   top: 16.0,
                   left: 16.0,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start, // Align text to the left
                     children: [
                       Text(
                         'Rekomendasi Hari Ini',
@@ -213,7 +215,8 @@ class AtmaKitchenPage extends StatelessWidget {
               bottom: 16.0,
               left: 16.0,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
+                crossAxisAlignment:
+                    CrossAxisAlignment.start, // Align text to the left
                 children: [
                   Text(
                     title,

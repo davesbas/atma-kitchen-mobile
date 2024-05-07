@@ -13,7 +13,8 @@ class AbsensiView extends StatefulWidget {
 class _AbsensiViewState extends State<AbsensiView> {
   late List<Employee> filteredEmployees;
   TextEditingController _dateFilterController = TextEditingController();
-  DateTime _selectedDate = DateTime.now(); // Tambahkan variabel untuk menyimpan tanggal yang dipilih
+  DateTime _selectedDate =
+      DateTime.now(); // Tambahkan variabel untuk menyimpan tanggal yang dipilih
 
   @override
   void initState() {
@@ -40,12 +41,14 @@ class _AbsensiViewState extends State<AbsensiView> {
                       labelText: 'Filter Tanggal (YYYY-MM-DD)',
                     ),
                     readOnly: true,
-                    onTap: () => _selectDate(context), // Tampilkan date picker ketika tombol ditekan
+                    onTap: () => _selectDate(
+                        context), // Tampilkan date picker ketika tombol ditekan
                   ),
                 ),
                 IconButton(
                   icon: Icon(Icons.calendar_today),
-                  onPressed: () => _selectDate(context), // Tampilkan date picker ketika tombol ditekan
+                  onPressed: () => _selectDate(
+                      context), // Tampilkan date picker ketika tombol ditekan
                 ),
               ],
             ),
@@ -57,7 +60,8 @@ class _AbsensiViewState extends State<AbsensiView> {
                 final Employee employee = filteredEmployees[index];
                 return ListTile(
                   title: Text(employee.name),
-                  subtitle: Text('Tanggal: ${employee.date}'), // Gunakan tanggal dari data employee
+                  subtitle: Text(
+                      'Tanggal: ${employee.date}'), // Gunakan tanggal dari data employee
                 );
               },
             ),
@@ -77,9 +81,13 @@ class _AbsensiViewState extends State<AbsensiView> {
     if (pickedDate != null) {
       setState(() {
         _selectedDate = pickedDate;
-        _dateFilterController.text = _selectedDate.toString().split(' ')[0]; // Update text field dengan tanggal yang dipilih
-        filteredEmployees = widget.dismissedEmployees.where((employee) =>
-            employee.date == _selectedDate.toString().split(' ')[0]).toList(); // Filter berdasarkan tanggal yang dipilih
+        _dateFilterController.text = _selectedDate
+            .toString()
+            .split(' ')[0]; // Update text field dengan tanggal yang dipilih
+        filteredEmployees = widget.dismissedEmployees
+            .where((employee) =>
+                employee.date == _selectedDate.toString().split(' ')[0])
+            .toList(); // Filter berdasarkan tanggal yang dipilih
       });
     }
   }

@@ -9,17 +9,17 @@ void main() {
 
 class AttendanceManagementPage extends StatefulWidget {
   @override
-  _AttendanceManagementPageState createState() => _AttendanceManagementPageState();
+  _AttendanceManagementPageState createState() =>
+      _AttendanceManagementPageState();
 }
 
 class _AttendanceManagementPageState extends State<AttendanceManagementPage> {
-List<Employee> employees = [
-  Employee(name: 'John Doe', isPresent: true, date: '2024-04-24'),
-  Employee(name: 'Jane Smith', isPresent: true, date: '2024-04-25'),
-  Employee(name: 'Alice Johnson', isPresent: true, date: '2024-04-16'),
-  Employee(name: 'Bob Brown', isPresent: true, date: '2024-04-15'),
-];
-
+  List<Employee> employees = [
+    Employee(name: 'John Doe', isPresent: true, date: '2024-04-24'),
+    Employee(name: 'Jane Smith', isPresent: true, date: '2024-04-25'),
+    Employee(name: 'Alice Johnson', isPresent: true, date: '2024-04-16'),
+    Employee(name: 'Bob Brown', isPresent: true, date: '2024-04-15'),
+  ];
 
   List<Employee> dismissedEmployees = [];
 
@@ -50,7 +50,8 @@ List<Employee> employees = [
             onDismissed: (direction) {
               setState(() {
                 employees.removeAt(index); // Remove the dismissed employee
-                dismissedEmployees.add(employee); // Add dismissed employee to dismissedEmployees list
+                dismissedEmployees.add(
+                    employee); // Add dismissed employee to dismissedEmployees list
               });
             },
             child: ListTile(
@@ -58,7 +59,8 @@ List<Employee> employees = [
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(employee.name),
-                  Text('Date: ${DateTime.now().toString().split(' ')[0]}'), // Display current date
+                  Text(
+                      'Date: ${DateTime.now().toString().split(' ')[0]}'), // Display current date
                 ],
               ),
               trailing: employee.isPresent
@@ -73,7 +75,8 @@ List<Employee> employees = [
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AbsensiView(dismissedEmployees: dismissedEmployees),
+              builder: (context) =>
+                  AbsensiView(dismissedEmployees: dismissedEmployees),
             ),
           );
         },
@@ -82,7 +85,6 @@ List<Employee> employees = [
     );
   }
 }
-
 
 class Employee {
   String name;

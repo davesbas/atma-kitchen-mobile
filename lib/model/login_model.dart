@@ -9,16 +9,18 @@ class LoginModel {
   final String token;
   final String userName;
   final int userPoints;
+  final String role; // New property to store the user's role
 
   LoginModel({
     required this.idUserCredentials,
-    required this.idCustomer,
-    required this.idKaryawan,
+    this.idCustomer,
+    this.idKaryawan,
     required this.email,
     required this.password,
     required this.token,
     required this.userName,
     required this.userPoints,
+    required this.role, // Initialize role in the constructor
   });
 
   factory LoginModel.fromRawJson(String str) =>
@@ -33,14 +35,15 @@ class LoginModel {
         'token': token,
         'user_name': userName,
         'user_points': userPoints,
+        'role': role, // Include role in JSON serialization
       };
 
   factory LoginModel.fromJson(Map<String, dynamic> json) {
     // Parsing nested user details which could either be from Customer or Karyawan
-    var userDetail = json['user_detail'] ?? {};
+    var userDetail = json['user'] ?? {};
     int userPoints = 0;
     String userName = '';
-    
+
     if (json['id_customer'] != null) {
       userName = userDetail['nama'] ?? '';
       userPoints = userDetail['jumlah_poin'] ?? 0;
@@ -50,14 +53,15 @@ class LoginModel {
     }
 
     return LoginModel(
-      idUserCredentials: json['id_user_credentials'],
+      idUserCredentials: json['id_user_credentials'] ?? 0,
       idCustomer: json['id_customer'],
       idKaryawan: json['id_karyawan'],
-      email: json['email'],
-      password: json['password'],
-      token: json['token'],
-      userName: userName,
-      userPoints: userPoints,
+      email: json['email'] ?? '',
+      password: json['password'] ?? '',
+      token: json['token'] ?? '',
+      userName: json['nama'] ?? '',
+      userPoints: json['jumlah_poin'] ?? 0,
+      role: json['role'] ?? '', // Extract role from JSON
     );
   }
 

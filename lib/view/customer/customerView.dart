@@ -1,9 +1,12 @@
+import 'package:atma_kitchen_mobile/auth_service/auth_service.dart';
+import 'package:atma_kitchen_mobile/auth_service/customer_service.dart';
 import 'package:flutter/material.dart';
 import 'package:atma_kitchen_mobile/view/loginView.dart';
-import 'package:atma_kitchen_mobile/controller/login_controller.dart';
-import 'package:atma_kitchen_mobile/auth_service/auth_service.dart';
+// import 'package:atma_kitchen_mobile/auth_service/auth_service.dart';
 
 class customerViewPage extends StatefulWidget {
+  const customerViewPage({super.key});
+
   @override
   _customerViewPageState createState() => _customerViewPageState();
 }
@@ -12,36 +15,42 @@ class _customerViewPageState extends State<customerViewPage> {
   String _userName = '';
   String _userEmail = '';
   int _userPoints = 0;
+  bool _isLoading = true;
 
   @override
   void initState() {
+    _getUserInfo();
     super.initState();
     // Ambil informasi pengguna saat initState
-    _getUserInfo();
   }
 
   // Method untuk mengambil informasi pengguna
-  void _getUserInfo() {
-    _userName = AuthService.userName ?? '';
-    _userEmail = AuthService.userEmail ?? '';
-    _userPoints = AuthService.userPoints ?? 0;
+  Future<void> _getUserInfo() async {
+    await CustomerService.getUserInfo().then((c) {
+      setState(() {
+        _userName = c.nama;
+        _userEmail = c.email; // Change this to the actual email from c
+        _userPoints = c.jumlahPoin;
+        _isLoading = false;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Atma Kitchen',
           style: TextStyle(
             color: Colors.black,
           ),
         ),
-        backgroundColor: Color.fromRGBO(240, 240, 240, 240),
+        backgroundColor: const Color.fromRGBO(240, 240, 240, 240),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: Icon(Icons.menu),
+              icon: const Icon(Icons.menu),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -50,87 +59,87 @@ class _customerViewPageState extends State<customerViewPage> {
         ),
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            UserAccountsDrawerHeader(
-              accountName: Text(_userName), // Tampilkan nama pengguna
-              accountEmail: Row(
+        child: _isLoading
+            ? const Center(child: Text("Loading"))
+            : ListView(
+                padding: EdgeInsets.zero,
                 children: [
-                  Text(_userEmail), // Tampilkan email pengguna
-                  SizedBox(width: 8.0),
-                  // Points with coin icon
-                  Row(
-                    children: [
-                      Text(
-                        '$_userPoints Points', // Tampilkan poin pengguna
-                        style: TextStyle(
-                          color: Colors.white,
+                  UserAccountsDrawerHeader(
+                    accountName: Text(_userName), // Tampilkan nama pengguna
+                    accountEmail: Row(
+                      children: [
+                        Text(_userEmail), // Tampilkan email pengguna
+                        const SizedBox(width: 8.0),
+                        // Points with coin icon
+                        Row(
+                          children: [
+                            Text(
+                              '$_userPoints Points', // Tampilkan poin pengguna
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(width: 4.0),
+                            const Icon(
+                              Icons.monetization_on,
+                              color: Colors.white,
+                            ),
+                          ],
                         ),
-                      ),
-                      SizedBox(width: 4.0),
-                      Icon(
-                        Icons.monetization_on,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
-                  SizedBox(width: 8.0),
-                  InkWell(
-                    onTap: () {
-                      // Add navigation logic to edit profile page
-                    },
-                    child: Icon(
-                      Icons.edit,
-                      color: Colors.white,
+                        const SizedBox(width: 8.0),
+                        InkWell(
+                          onTap: () {
+                            // Add navigation logic to edit profile page
+                          },
+                          child: const Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
+                    currentAccountPicture: const CircleAvatar(
+                      child: Icon(Icons.person),
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('Home'),
+                    onTap: () {
+                      Navigator.pop(context); // Close the drawer
+                      // Add navigation logic to home page
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('History'),
+                    onTap: () {
+                      Navigator.pop(context); // Close the drawer
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginView()),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Logout'),
+                    onTap: () async {
+                      await AuthService.logout();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginView()),
+                      );
+                    },
                   ),
                 ],
               ),
-              currentAccountPicture: CircleAvatar(
-                child: Icon(Icons.person),
-              ),
-            ),
-            ListTile(
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pop(context); // Close the drawer
-                // Add navigation logic to home page
-              },
-            ),
-            ListTile(
-              title: Text('History'),
-              onTap: () {
-                Navigator.pop(context); // Close the drawer
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginView()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Logout'),
-              onTap: () {
-                // Panggil fungsi logout dari AuthService
-                AuthService.logout();
-                // Navigasi ke halaman login
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginView()),
-                );
-              },
-            ),
-          ],
-        ),
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Color.fromRGBO(240, 240, 240, 240),
         ),
         child: ListView(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           children: [
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Stack(
               children: [
                 GestureDetector(
@@ -141,7 +150,7 @@ class _customerViewPageState extends State<customerViewPage> {
                     height: 200.0,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
-                      image: DecorationImage(
+                      image: const DecorationImage(
                         image: NetworkImage(
                           'https://st4.depositphotos.com/1010121/24692/i/450/depositphotos_246923750-stock-photo-one-whole-german-black-forest.jpg',
                         ),
@@ -150,7 +159,7 @@ class _customerViewPageState extends State<customerViewPage> {
                     ),
                   ),
                 ),
-                Positioned(
+                const Positioned(
                   top: 16.0,
                   left: 16.0,
                   child: Column(
@@ -176,15 +185,15 @@ class _customerViewPageState extends State<customerViewPage> {
                 ),
               ],
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Expanded(
               child: Container(
                 width: double.infinity,
-                padding: EdgeInsets.all(16.0),
-                margin: EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.all(16.0),
+                margin: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   children: [
-                    Text(
+                    const Text(
                       'Our Menu',
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -192,14 +201,14 @@ class _customerViewPageState extends State<customerViewPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 16.0),
+                    const SizedBox(height: 16.0),
                     // Menu Items
                     GridView.count(
                       crossAxisCount: 2,
                       crossAxisSpacing: 16.0,
                       mainAxisSpacing: 16.0,
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       children: [
                         _buildMenuItem(
                           'Red Velvet',
@@ -218,8 +227,8 @@ class _customerViewPageState extends State<customerViewPage> {
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             // Reviews Carousel
             // You can implement a carousel widget here
           ],
@@ -242,7 +251,7 @@ class _customerViewPageState extends State<customerViewPage> {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 2,
               blurRadius: 7,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
@@ -265,7 +274,7 @@ class _customerViewPageState extends State<customerViewPage> {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,
@@ -278,10 +287,10 @@ class _customerViewPageState extends State<customerViewPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 4.0),
+                  const SizedBox(height: 4.0),
                   Text(
                     description,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12.0,
                       shadows: [
@@ -304,7 +313,7 @@ class _customerViewPageState extends State<customerViewPage> {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: customerViewPage(),
   ));
 }

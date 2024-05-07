@@ -1,8 +1,12 @@
+import 'package:atma_kitchen_mobile/utils/shared_prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:atma_kitchen_mobile/view/dashboardView.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  sharedPrefs = await SharedPreferences.getInstance();
   runApp(MaterialApp(
     home: AtmaKitchenPage(),
   ));

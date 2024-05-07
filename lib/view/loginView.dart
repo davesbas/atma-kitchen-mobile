@@ -1,7 +1,6 @@
 import 'package:atma_kitchen_mobile/view/manajerOperasional/presensiView.dart';
 import 'package:flutter/material.dart';
 import 'package:atma_kitchen_mobile/view/customer/customerView.dart';
-import 'package:atma_kitchen_mobile/repository/login_repository.dart';
 import 'package:atma_kitchen_mobile/controller/login_controller.dart';
 
 class LoginView extends StatefulWidget {
@@ -15,13 +14,13 @@ class _LoginViewState extends State<LoginView> {
 
   bool _obscurePassword = true;
 
-Future<void> _onPressedLogin() async {
-  await LoginController.loginUser(
-    context,
-    _emailController.text.trim(),
-    _passwordController.text.trim(),
-  );
-}
+  Future<void> _onPressedLogin() async {
+    await LoginController.loginUser(
+      context,
+      _emailController.text.trim(),
+      _passwordController.text.trim(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

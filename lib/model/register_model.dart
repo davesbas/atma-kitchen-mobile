@@ -48,7 +48,8 @@ class UserData {
     required this.poin,
   });
 
-  factory UserData.fromRawJson(String str) => UserData.fromJson(json.decode(str));
+  factory UserData.fromRawJson(String str) =>
+      UserData.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
