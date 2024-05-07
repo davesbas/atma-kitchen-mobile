@@ -1,95 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:atma_kitchen_mobile/view/manajerOperasional/absensiView.dart';
-
-void main() {
-  runApp(MaterialApp(
-    home: AttendanceManagementPage(),
-  ));
-}
+import 'package:atma_kitchen_mobile/model/karyawan_model.dart'; // Pastikan import model karyawan sesuai dengan struktur Anda
+import 'package:atma_kitchen_mobile/auth_service/karyawan_service.dart'; // Pastikan import service employee sesuai dengan struktur Anda
 
 class AttendanceManagementPage extends StatefulWidget {
   @override
-  _AttendanceManagementPageState createState() =>
-      _AttendanceManagementPageState();
+  _AttendanceViewPageState createState() => _AttendanceViewPageState();
 }
 
-class _AttendanceManagementPageState extends State<AttendanceManagementPage> {
-  List<Employee> employees = [
-    Employee(name: 'John Doe', isPresent: true, date: '2024-04-24'),
-    Employee(name: 'Jane Smith', isPresent: true, date: '2024-04-25'),
-    Employee(name: 'Alice Johnson', isPresent: true, date: '2024-04-16'),
-    Employee(name: 'Bob Brown', isPresent: true, date: '2024-04-15'),
-  ];
+class _AttendanceViewPageState extends State<AttendanceManagementPage> {
+  List<KaryawanModel> _employees = []; // List untuk menyimpan data karyawan
 
-  List<Employee> dismissedEmployees = [];
+  @override
+  void initState() {
+    super.initState();
+    _loadEmployees(); // Memuat data karyawan saat halaman dimuat
+  }
+
+  // Fungsi untuk memuat data karyawan dari service
+  Future<void> _loadEmployees() async {
+    try {
+      KaryawanModel employee = await EmployeeService.getEmployeeInfo();
+      setState(() {
+        _employees.add(employee);
+      });
+    } catch (e) {
+      // Tangani kesalahan saat memuat data
+      print("Error loading employees: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Attendance Management'),
+        title: Text('Attendance View'),
       ),
-      body: ListView.builder(
-        itemCount: employees.length,
-        itemBuilder: (BuildContext context, int index) {
-          final Employee employee = employees[index];
-          return Dismissible(
-            key: Key(employee.name),
-            background: Container(
-              color: Colors.red,
-              child: Center(
-                child: Text(
-                  'Tidak Masuk',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.0,
+      body: _employees.isNotEmpty
+          ? ListView.builder(
+              itemCount: _employees.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title:
+                      Text(_employees[index].nama), // Menampilkan nama karyawan
+                  trailing: ElevatedButton(
+                    onPressed: () {
+                      // Tambahkan fungsi untuk tombol absen di sini
+                      // Contoh: _absen(_employees[index].id_karyawan);
+                    },
+                    child: Text('Absen'),
                   ),
-                ),
-              ),
+                );
+              },
+            )
+          : Center(
+              child:
+                  CircularProgressIndicator(), // Indikator loading jika data belum dimuat
             ),
-            onDismissed: (direction) {
-              setState(() {
-                employees.removeAt(index); // Remove the dismissed employee
-                dismissedEmployees.add(
-                    employee); // Add dismissed employee to dismissedEmployees list
-              });
-            },
-            child: ListTile(
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(employee.name),
-                  Text(
-                      'Date: ${DateTime.now().toString().split(' ')[0]}'), // Display current date
-                ],
-              ),
-              trailing: employee.isPresent
-                  ? Icon(Icons.check_circle, color: Colors.green)
-                  : Icon(Icons.cancel, color: Colors.red),
-            ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  AbsensiView(dismissedEmployees: dismissedEmployees),
-            ),
-          );
-        },
-        child: Icon(Icons.list),
-      ),
     );
   }
-}
-
-class Employee {
-  String name;
-  bool isPresent;
-  String date;
-
-  Employee({required this.name, required this.isPresent, required this.date});
 }

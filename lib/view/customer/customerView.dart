@@ -2,6 +2,7 @@ import 'package:atma_kitchen_mobile/auth_service/auth_service.dart';
 import 'package:atma_kitchen_mobile/auth_service/customer_service.dart';
 import 'package:flutter/material.dart';
 import 'package:atma_kitchen_mobile/view/loginView.dart';
+import 'package:atma_kitchen_mobile/view/history_pemesanan/history_view.dart';
 // import 'package:atma_kitchen_mobile/auth_service/auth_service.dart';
 
 class customerViewPage extends StatefulWidget {
@@ -115,7 +116,8 @@ class _customerViewPageState extends State<customerViewPage> {
                       Navigator.pop(context); // Close the drawer
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginView()),
+                        MaterialPageRoute(
+                            builder: (context) => OrderHistoryPage()),
                       );
                     },
                   ),

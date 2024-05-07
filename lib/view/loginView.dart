@@ -1,6 +1,5 @@
-import 'package:atma_kitchen_mobile/view/manajerOperasional/presensiView.dart';
 import 'package:flutter/material.dart';
-import 'package:atma_kitchen_mobile/view/customer/customerView.dart';
+import 'package:atma_kitchen_mobile/view/forgotPass/forgot_password.dart';
 import 'package:atma_kitchen_mobile/controller/login_controller.dart';
 
 class LoginView extends StatefulWidget {
@@ -60,6 +59,16 @@ class _LoginViewState extends State<LoginView> {
             ElevatedButton(
               onPressed: _onPressedLogin,
               child: Text('Login'),
+            ),
+            SizedBox(height: 10),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ForgotPasswordView()),
+                );
+              },
+              child: Text('Forgot Password?'),
             ),
           ],
         ),
