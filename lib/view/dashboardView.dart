@@ -1,3 +1,4 @@
+import 'package:atma_kitchen_mobile/view/about.dart';
 import 'package:flutter/material.dart';
 import 'package:atma_kitchen_mobile/view/loginView.dart';
 import 'package:atma_kitchen_mobile/model/produk.dart';
@@ -72,6 +73,16 @@ class AtmaKitchenPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => LoginView()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text('About'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AboutPage()),
                 );
               },
             ),
