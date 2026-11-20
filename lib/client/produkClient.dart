@@ -1,25 +1,28 @@
-import 'package:atma_kitchen_mobile/model/produk.dart';
 import 'dart:convert';
+import 'package:atma_kitchen_mobile/config/api_config.dart';
+import 'package:atma_kitchen_mobile/model/produk.dart';
 import 'package:http/http.dart' as http;
 
 class ProdukClient {
-  static final String baseUrl = 'http://10.0.2.2:8000';
-  static final String endpoint = '/api/produk';
-
   static Future<List<Produk>> fetchAll() async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl$endpoint'),
-        headers: {"Connection": "Keep-Alive"},
+        ApiConfig.uri('/produk'),
+        headers: ApiConfig.jsonHeaders(withAuth: false),
       );
       if (response.statusCode == 200) {
-        final Iterable list = json.decode(response.body)['data'];
-        return list.map((e) => Produk.fromJson(e)).toList();
+        final decoded = jsonDecode(response.body);
+        final List<dynamic> list =
+            decoded is Map<String, dynamic> ? (decoded['data'] ?? []) : [];
+        return list
+            .whereType<Map<String, dynamic>>()
+            .map(Produk.fromJson)
+            .toList();
       } else {
-        throw Exception('Failed to load products: ${response.reasonPhrase}');
+        throw Exception('Gagal memuat produk (${response.statusCode})');
       }
     } catch (e) {
-      throw Exception('Error fetching products: $e');
+      throw Exception('Gagal terhubung ke server (${ApiConfig.baseUrl}): $e');
     }
   }
 }
